@@ -1,0 +1,16 @@
+lsm:
+  func_name: linear
+  ndim: 300 ####################### 2  300 (when linear2)
+model:
+  affine: true
+  nflow: 15 #### 20    60/40
+optimizer:
+  LR: 0.001 ####### 0.001  0.0001
+output:
+  save: true    #true
+  verbose: true
+parameters:
+  batch_size: 300 #### 1000 o    10 l 2          50
+  epochs: 30 ######## 5 70                   20
+regularizer:
+  LogDet: 1.0 ############ 1 o   50  5  1.5
