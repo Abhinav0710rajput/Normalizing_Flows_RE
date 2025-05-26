@@ -1,0 +1,21 @@
+### Experiment Configuration ###
+lsm:
+  func_name: linear2
+  ndim: 2
+model:
+  affine: true
+  nflow: 60
+optimizer:
+  LR: 0.001
+output:
+  save: true
+  verbose: true
+parameters:
+  batch_size: 100
+  epochs: 50
+regularizer:
+  LogDet: 1
+
+
+### Training Log ###
+
