@@ -116,6 +116,11 @@ def calc_rmse():
     
     df.to_csv("nRMSE.csv")
 
+if __name__ == "__main__":
+    create_rmse()
+    calc_rmse()
+    print("RMSE calculation completed and saved to nRMSE.csv")
+
 
 
 
