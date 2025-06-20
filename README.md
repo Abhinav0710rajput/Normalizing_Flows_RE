@@ -2,7 +2,7 @@
 
 _______________________
 
-This repository contains the implementation of Normalizing Flows for estimating probabilities of failure in structural reliability analysis. The primary goal is to use a Planar Flow model as an importance sampling distribution to efficiently estimate very small failure probabilities.
+This projects contains the implementation of Normalizing Flows for estimating probabilities of failure in structural reliability analysis. The primary goal is to use a Planar Flow model as an importance sampling distribution to efficiently estimate very small failure probabilities.
 
 ## File Structure
 
