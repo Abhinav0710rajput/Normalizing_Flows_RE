@@ -85,12 +85,12 @@ def model_train(n_epoch, n_batch, ndim, device, importance_sampler, prior, func,
         if(k == 0):
             sample_ = torch.randn(1000, ndim).to(device=device)
             all_samples, _ = importance_sampler(sample_)
-            print(all_samples.shape, " <- collected samples")
+            #print(all_samples.shape, " <- collected samples")
         else:
             sample_ = torch.randn(1000, ndim).to(device=device)
             transformed_sample, _ = importance_sampler(sample_)
             all_samples = torch.cat([all_samples, transformed_sample], dim=0)
-            print(all_samples.shape, " <- collected samples")
+            #print(all_samples.shape, " <- collected samples")
 
         torch.save(all_samples, 'all_samples.pt')
 
@@ -230,9 +230,6 @@ def model_train(n_epoch, n_batch, ndim, device, importance_sampler, prior, func,
     if save:
         # 1) move sampler to CPU
         importance_sampler_cpu = importance_sampler.to('cpu')
-
-
-   
 
         # loop over seeds
 
