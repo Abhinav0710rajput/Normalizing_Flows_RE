@@ -31,7 +31,7 @@ def model_train(n_epoch, n_batch, ndim, device, importance_sampler, prior, func,
     alpha_end = 10
 	
     T_cool = 0.1*n_epoch
-    scheduler = MultiStepLR(optimizer, milestones=[T_cool], gamma=0.9) #intially 1.0  d d
+    scheduler = MultiStepLR(optimizer, milestones=[T_cool], gamma=1.0) #intially 1.0  d d
 
 
     #pretraining steps:
@@ -44,11 +44,10 @@ def model_train(n_epoch, n_batch, ndim, device, importance_sampler, prior, func,
         loss.backward()
         #torch.nn.utils.clip_grad_norm_(importance_sampler.parameters(), 0.01)
         optimizer.step()
+        
 
-    
-    file_name = "training_log.txt"
-    with open(file_name, "w") as file:
-        file.write("Epoch\tLoss\n") 
+
+
 
     ########loss = 1e10     ######
 
@@ -128,12 +127,13 @@ def model_train(n_epoch, n_batch, ndim, device, importance_sampler, prior, func,
         pf_list.append(pf.detach().cpu().numpy())
         pf1_list.append(pf1.detach().cpu().numpy())
 
-        #print("epoch:", k, " loss:", loss.detach().cpu().numpy())
-        #if verbose:
-        print(f"epoch: {k:}, loss: {loss_list[-1]:.2f}, loss2: {loss2_list[-1]:.2f}, pf:{pf_list[-1]:1.2e}, pf1:{pf1_list[-1]:1.2e}, loss data: {loss_data_list[-1]:.2f}, loss prior: {loss_prior_list[-1]:.2f}, logdet: {logdet_list[-1]:.2f}")
 
-        with open(file_name, "a") as file:
-            file.write(f"{k:}\t{loss_list[-1]:.2f}\n")
+        log_message = f"epoch: {k:}, loss: {loss_list[-1]:.2f}, loss2: {loss2_list[-1]:.2f}, pf:{pf_list[-1]:1.2e}, pf1:{pf1_list[-1]:1.2e}, loss data: {loss_data_list[-1]:.2f}, loss prior: {loss_prior_list[-1]:.2f}, logdet: {logdet_list[-1]:.2f}"
+        print(log_message)
+        with open("training_info.txt", "a") as f:
+            f.write(log_message + "\\n")
+
+
 
 
 
