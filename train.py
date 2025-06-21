@@ -316,7 +316,7 @@ def model_train(n_epoch, n_batch, ndim, device, importance_sampler, prior, func,
                     f.create_dataset('est_pf1', data=pf1_cpu.detach().cpu().numpy())
                     f.create_dataset('samples', data=theta_sample_cpu.detach().cpu().numpy())
 
-            # 5) move sampler back to GPU so further training still works
+        # 5) move sampler back to GPU so further training still works
         importance_sampler.to(device)
 
 
