@@ -317,7 +317,7 @@ def model_train(n_epoch, n_batch, ndim, device, importance_sampler, prior, func,
                     f.create_dataset('samples', data=theta_sample_cpu.detach().cpu().numpy())
 
             # 5) move sampler back to GPU so further training still works
-            importance_sampler.to(device)
+        importance_sampler.to(device)
 
 
         
