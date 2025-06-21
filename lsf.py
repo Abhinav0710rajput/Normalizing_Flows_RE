@@ -72,7 +72,7 @@ class LimitStateFunction:
         initial_state = torch.tensor([0.0, 0.0, 0.0], device=device)  # Ensure initial_state is on the same device
 
         for sim in range(theta.size(0)):  # Can be parallelized
-            # if sim % 500 == 0:
+            # if sim % 1 == 0:
             #     print("sim ", sim + 1, "  device", device)  
 
             oscillator = HystereticOscillator(u_j[sim, :], u_hat_j[sim, :], device = device)  # Move model to device

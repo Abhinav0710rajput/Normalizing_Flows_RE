@@ -130,8 +130,18 @@ def model_train(n_epoch, n_batch, ndim, device, importance_sampler, prior, func,
 
         log_message = f"epoch: {k:}, loss: {loss_list[-1]:.2f}, loss2: {loss2_list[-1]:.2f}, pf:{pf_list[-1]:1.2e}, pf1:{pf1_list[-1]:1.2e}, loss data: {loss_data_list[-1]:.2f}, loss prior: {loss_prior_list[-1]:.2f}, logdet: {logdet_list[-1]:.2f}"
         print(log_message)
-        with open("training_info.txt", "a") as f:
-            f.write(log_message + "\\n")
+
+        pf = "training_log.csv"
+
+
+        if not os.path.exists(pf):
+            with open(pf, 'w') as f:
+                f.write("epoch, loss, loss2, pf, pf1, loss_data, loss_prior, logdet\n")
+
+        # Append the latest values to the file
+        with open(pf, 'a') as f:
+            f.write(f"{k}, {loss_list[-1]:.2f}, {loss2_list[-1]:.2f}, {pf_list[-1]:1.2e}, {pf1_list[-1]:1.2e}, "
+                    f"{loss_data_list[-1]:.2f}, {loss_prior_list[-1]:.2f}, {logdet_list[-1]:.2f}\n")
 
 
 
