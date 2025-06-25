@@ -232,8 +232,6 @@ def model_train(n_epoch, n_batch, ndim, device, importance_sampler, prior, func,
     #             f.create_dataset('est_pf1', data=pf1_.detach().cpu().numpy())
     #             f.create_dataset('samples', data=theta_sample.detach().cpu().numpy())
 
-
-
     # ---------------------------------------------------------
     # SAVE & INFERENCE (CPU only)
     # ---------------------------------------------------------
@@ -244,14 +242,14 @@ def model_train(n_epoch, n_batch, ndim, device, importance_sampler, prior, func,
         # loop over seeds
 
         with torch.no_grad():
-            for index_seed in range(20):
+            for index_seed in range(1):     ###### 100 seeds initially
                 # update seed in save_name 
 
                 save_name_cpu = re.sub(r"Seed_\d+_", f"Seed_{index_seed}_", save_name)
 
                 print(f"Calculating pf for {save_name_cpu} on CPU…")
 
-                n_samples = 10000
+                n_samples = 1 #10000 initially
 
                 # 2) sample z on CPU
                 z_sample_cpu = torch.randn(n_samples, ndim, device='cpu')
