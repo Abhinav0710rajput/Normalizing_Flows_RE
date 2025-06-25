@@ -242,7 +242,7 @@ def model_train(n_epoch, n_batch, ndim, device, importance_sampler, prior, func,
         # loop over seeds
 
         with torch.no_grad():
-            for index_seed in range(1):     ###### 100 seeds initially
+            for index_seed in range(2):     ###### 100 seeds initially
                 # update seed in save_name 
 
                 save_name_cpu = re.sub(r"Seed_\d+_", f"Seed_{index_seed}_", save_name)
