@@ -235,14 +235,25 @@ def model_train(n_epoch, n_batch, ndim, device, importance_sampler, prior, func,
     # ---------------------------------------------------------
     # SAVE & INFERENCE (CPU only)
     # ---------------------------------------------------------
+
+
+
     if save:
         # 1) move sampler to CPU
         importance_sampler_cpu = importance_sampler.to('cpu')
 
+        #save the model
+        torch.save(importance_sampler, "model_full.pth")
+        print("full model saved")
+
+        #save only the parameters
+        torch.save(importance_sampler.state_dict(), "model_params.pth")
+        print("model parameters saved")
+
         # loop over seeds
 
         with torch.no_grad():
-            for index_seed in range(2):     ###### 100 seeds initially
+            for index_seed in range(1):     ###### 100 seeds initially
                 # update seed in save_name 
 
                 save_name_cpu = re.sub(r"Seed_\d+_", f"Seed_{index_seed}_", save_name)
