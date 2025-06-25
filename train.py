@@ -249,7 +249,7 @@ def model_train(n_epoch, n_batch, ndim, device, importance_sampler, prior, func,
 
 
 
-    if not save:
+    if not save:  ## save is false for now
         # 1) move sampler to CPU
         importance_sampler_cpu = importance_sampler.to('cpu')
 
