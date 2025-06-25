@@ -232,9 +232,20 @@ def model_train(n_epoch, n_batch, ndim, device, importance_sampler, prior, func,
     #             f.create_dataset('est_pf1', data=pf1_.detach().cpu().numpy())
     #             f.create_dataset('samples', data=theta_sample.detach().cpu().numpy())
 
+
+
     # ---------------------------------------------------------
     # SAVE & INFERENCE (CPU only)
     # ---------------------------------------------------------
+
+
+    #save the model
+    torch.save(importance_sampler, "model_full.pth")    ####### full model
+    print("full model saved")
+
+    #save only the parameters
+    torch.save(importance_sampler.state_dict(), "model_params.pth")
+    print("model parameters saved")
 
 
 
@@ -242,13 +253,6 @@ def model_train(n_epoch, n_batch, ndim, device, importance_sampler, prior, func,
         # 1) move sampler to CPU
         importance_sampler_cpu = importance_sampler.to('cpu')
 
-        #save the model
-        torch.save(importance_sampler, "model_full.pth")
-        print("full model saved")
-
-        #save only the parameters
-        torch.save(importance_sampler.state_dict(), "model_params.pth")
-        print("model parameters saved")
 
         # loop over seeds
 
