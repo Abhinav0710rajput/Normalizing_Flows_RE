@@ -249,7 +249,7 @@ def model_train(n_epoch, n_batch, ndim, device, importance_sampler, prior, func,
 
                 print(f"Calculating pf for {save_name_cpu} on CPU…")
 
-                n_samples = 1 #10000 initially
+                n_samples = 10000 #10000 initially
 
                 # 2) sample z on CPU
                 z_sample_cpu = torch.randn(n_samples, ndim, device='cpu')
