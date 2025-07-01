@@ -26,6 +26,7 @@ def main(seed_value, config_data):
     lr = float(config_data['optimizer']['LR'])
     verbose = config_data['output']['verbose']
     save = config_data['output']['save']
+    
     path_save = './saves/files/'
     logdet_weight = float(config_data['regularizer']['LogDet'])
     save_name = 'Seed_' + str(seed_value) + '_flow_' + str(n_flow) + '_batch_' + str(n_batch) + '_epochs_' + str(n_epoch) + '_logdet_' + str(logdet_weight) + '_ndim_' + str(ndim) + '_lr_' + str(lr)
@@ -43,8 +44,8 @@ def main(seed_value, config_data):
     # define priors
     prior = torch.distributions.MultivariateNormal(torch.zeros(ndim).to(device), torch.eye(ndim).to(device))
 
-    # define model
     importance_sampler = PlanarFlow(ndim, K=n_flow).to(device)
+
     #scaler = Scaler(scale=np.sqrt(ndim)).to(device)
 
     # define optimizers

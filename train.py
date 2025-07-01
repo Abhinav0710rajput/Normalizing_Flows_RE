@@ -11,10 +11,8 @@ import re
 
 from datetime import datetime
 
-
-
-
 def model_train(n_epoch, n_batch, ndim, device, importance_sampler, prior, func, func2, logdet_weight_target, optimizer, verbose, print_file, save, path_save, save_name):
+
     loss_list = []
     loss_prior_list = []
     loss_data_list = []
@@ -34,6 +32,7 @@ def model_train(n_epoch, n_batch, ndim, device, importance_sampler, prior, func,
     scheduler = MultiStepLR(optimizer, milestones=[T_cool], gamma=1.0) #intially 1.0  d d
 
 
+
     #pretraining steps:
     for _ in range(10):
         z_sample = torch.randn(n_batch, ndim).to(device=device)
@@ -47,20 +46,7 @@ def model_train(n_epoch, n_batch, ndim, device, importance_sampler, prior, func,
         
 
 
-
-
-    ########loss = 1e10     ######
-
-
-
-
     for k in range(n_epoch):
-
-        now = datetime.now()
-        print(now)  
-
-
-
 
         if k+1 <= n_epoch - T_cool:
             alpha = alpha_start + (alpha_end - alpha_start)*((k+1) / (n_epoch-T_cool))
@@ -72,13 +58,10 @@ def model_train(n_epoch, n_batch, ndim, device, importance_sampler, prior, func,
             beta2 = logdet_weight_target  ############# what are these ??
         
         z_sample = torch.randn(n_batch, ndim).to(device=device)    ########### initially sampled z 
-
         
         ########################
 
         theta_sample, logdet1 = importance_sampler(z_sample)
-
-
 
         #############
 
@@ -96,8 +79,6 @@ def model_train(n_epoch, n_batch, ndim, device, importance_sampler, prior, func,
 
         #############
 
-        
-
         logdet = torch.squeeze(logdet1)
         
         loss_data = torch.log(func(theta_sample, alpha))
@@ -107,7 +88,6 @@ def model_train(n_epoch, n_batch, ndim, device, importance_sampler, prior, func,
         loss2 = torch.var(loss_data + loss_prior + logdet - prior.log_prob(z_sample))
 
         #print(loss2)
-
 
         pf = torch.mean((func2(theta_sample).squeeze().to(device))*torch.exp((loss_prior + logdet - prior.log_prob(z_sample))))
         pf1 = torch.mean(torch.exp(loss_data + loss_prior + logdet - prior.log_prob(z_sample)))
@@ -133,7 +113,6 @@ def model_train(n_epoch, n_batch, ndim, device, importance_sampler, prior, func,
 
         pf = "training_log.csv"
 
-
         if not os.path.exists(pf):
             with open(pf, 'w') as f:
                 f.write("epoch, loss, loss2, pf, pf1, loss_data, loss_prior, logdet\n")
@@ -142,110 +121,6 @@ def model_train(n_epoch, n_batch, ndim, device, importance_sampler, prior, func,
         with open(pf, 'a') as f:
             f.write(f"{k}, {loss_list[-1]:.2f}, {loss2_list[-1]:.2f}, {pf_list[-1]:1.2e}, {pf1_list[-1]:1.2e}, "
                     f"{loss_data_list[-1]:.2f}, {loss_prior_list[-1]:.2f}, {logdet_list[-1]:.2f}\n")
-
-
-
-
-
-        # output_image = "epoch_vs_loss.png"  # Output image file name
-
-        # epochs = []
-        # loss = []
-
-        # # Read data from file
-        # with open(file_name, 'r') as file:
-        #     lines = file.readlines()
-        #     for line in lines[1:]:
-        #         epoch, loss_value = map(float, line.split())
-        #         epochs.append(int(epoch))
-        #         loss.append(loss_value)
-
-        # # Plotting
-        # plt.figure(figsize=(10, 6))
-        # plt.plot(epochs, loss, marker='o', linestyle='-', color='b', label='Loss')
-        # plt.title('Epoch vs Loss', fontsize=14)
-        # plt.xlabel('Epoch', fontsize=12)
-        # plt.ylabel('Loss', fontsize=12)
-        # plt.axhline(y=0, color='r', linestyle='--', label='Zero Loss Line')
-        # plt.grid(True, linestyle='--', alpha=0.7)
-        # plt.legend(fontsize=12)
-        # plt.tight_layout()
-
-        # plt.savefig(output_image)
-
-        # # Show the plot
-
-    
-
-    # # save model
-    # if save:
-    #     torch.save(importance_sampler.state_dict(),path_save + save_name +'.pt')
-
-    #     n_samples = 0
-
-    #     for index_seed in range (100):   ################## inference with varying seed values
-                
-    #         print(save_name, "save name!!")
-    #         save_name = re.sub(r"Seed_\d+_", f"Seed_{index_seed}_", save_name)
-    #         print(save_name, "updated name !!!!")
-
-    #         # "Seed_2_flow_60_batch_2_epochs_1_logdet_2.0_ndim_2_lr_0.001" <=save name
-
-    #         print("calculating prob...")
-
-    #         n_samples = 10000  # n_samples = 5000   1000    #1000
-    #         z_sample = torch.randn(n_samples, ndim).to(device=device)
-    #         theta_sample, logdet1 = importance_sampler(z_sample)
-
-    #         logdet = torch.squeeze(logdet1)
-    #         loss_data = torch.log(func(theta_sample, alpha_end))
-    #         loss_prior = prior.log_prob(theta_sample)
-
-
-    #         print("theta_sample device:", theta_sample.device)
-    #         print("logdet device:", logdet.device)
-    #         print("loss_prior device:", loss_prior.device)
-
-
-    #         func2_output = func2(theta_sample).to(device)
-    #         prior_log_prob = prior.log_prob(z_sample).to(device)
-
-    #         pf_ = torch.mean(
-    #             func2_output.squeeze() * torch.exp((loss_prior + logdet - prior_log_prob))
-    #         )
-
-    #         # pf_ = torch.mean((func2(theta_sample).squeeze())*torch.exp(loss_prior + logdet - prior.log_prob(z_sample)))
-    #         pf1_ = torch.mean(torch.exp(loss_data + loss_prior + logdet - prior.log_prob(z_sample)))
-
-    #         print(f"pf =  {pf_:1.2e}")
-    #         print(f"pf1 =  {pf1_:1.2e}")
-
-    #         with h5py.File(path_save + save_name +'.h5', 'w') as f:
-    #             f.create_dataset('total', data=np.array(loss_list))
-    #             f.create_dataset('data', data=np.array(loss_data_list))
-    #             f.create_dataset('logdet', data=np.array(logdet_list))
-    #             f.create_dataset('prior', data=np.array(loss_prior_list))
-    #             f.create_dataset('var', data=np.array(loss2_list))
-    #             f.create_dataset('pf', data=np.array(pf_list))
-    #             f.create_dataset('pf1', data=np.array(pf1_list))
-    #             f.create_dataset('est_pf', data=pf_.detach().cpu().numpy())
-    #             f.create_dataset('est_pf1', data=pf1_.detach().cpu().numpy())
-    #             f.create_dataset('samples', data=theta_sample.detach().cpu().numpy())
-
-
-
-    # ---------------------------------------------------------
-    # SAVE & INFERENCE (CPU only)
-    # ---------------------------------------------------------
-
-
-    #save the model
-    torch.save(importance_sampler, "model_full.pth")    ####### full model
-    print("full model saved")
-
-    #save only the parameters
-    torch.save(importance_sampler.state_dict(), "model_params.pth")
-    print("model parameters saved")
 
 
 
@@ -306,16 +181,6 @@ def model_train(n_epoch, n_batch, ndim, device, importance_sampler, prior, func,
 
                 # 4) save everything (will be on CPU tensors, so .cpu() is a no-op)
                 with h5py.File(path_save + save_name_cpu + '.h5', 'w') as f:
-                    # f.create_dataset('total', data=np.array(loss_list))
-                    # f.create_dataset('data',  data=np.array(loss_data_list))
-                    # f.create_dataset('logdet',data=np.array(logdet_list))
-                    # f.create_dataset('prior', data=np.array(loss_prior_list))
-                    # f.create_dataset('var',   data=np.array(loss2_list))
-                    # f.create_dataset('pf',    data=np.array(pf_list))
-                    # f.create_dataset('pf1',   data=np.array(pf1_list))
-                    # f.create_dataset('est_pf',  pf_cpu.detach().numpy())
-                    # f.create_dataset('est_pf1', pf1_cpu.detach().numpy())
-                    # f.create_dataset('samples', theta_sample_cpu.detach().numpy())
 
                     f.create_dataset('total', data=np.array(loss_list))
                     f.create_dataset('data', data=np.array(loss_data_list))
@@ -330,7 +195,6 @@ def model_train(n_epoch, n_batch, ndim, device, importance_sampler, prior, func,
 
         # 5) move sampler back to GPU so further training still works
         importance_sampler.to(device)
-
 
         
 if __name__=='__main__':
